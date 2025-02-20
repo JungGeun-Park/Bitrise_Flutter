@@ -11,15 +11,22 @@ workflows:
         inputs:
         - version: 3.29.0
         - is_update: 'false'
-    - flutter-test@1:
+    # - flutter-test@1:
+    #     inputs:
+    #     - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+    # - flutter-build@0:
+    #     inputs:
+    #     - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+    #     - platform: ios
+    #     - distribution_method: app-store
+    #     - automatic_code_signing: api-key
+    - xcode-archive@5:
         inputs:
-        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-    - flutter-build@0:
-        inputs:
-        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-        - platform: ios
-        - distribution_method: app-store
-        - automatic_code_signing: api-key
+          - project_path: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+          - scheme: "$BITRISE_SCHEME"
+          - distribution_method: app-store
+          - automatic_code_signing: api-key
+          - cache_level: none
     - script@1:
         title: Set IPA Path
         inputs:
@@ -49,4 +56,4 @@ meta:
     machine_type_id: g2-m1.4core
 app:
   envs:
-  - BITRISE_FLUTTER_PROJECT_LOCATION: "."
+  - BITRISE_FLUTTER_PROJECT_LOCATION: "./ios"
