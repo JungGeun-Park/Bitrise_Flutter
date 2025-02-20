@@ -30,6 +30,33 @@ workflows:
         - version: 3.29.0
         - is_update: 'false'
     - script@1:
+        title: Set Project Path and Scheme
+        inputs:
+          - content: |-
+              #!/bin/bash
+              set -ex
+              
+              # Find .xcodeproj file
+              PROJECT_PATH=$(find . -name "*.xcodeproj" -type d | head -n 1)
+              if [ -z "$PROJECT_PATH" ]; then
+                echo "Error: No Xcode project found"
+                exit 1
+              fi
+              
+              # Get scheme name
+              SCHEME=$(xcodebuild -project "$PROJECT_PATH" -list | grep -A 1 "Schemes:" | tail -n 1 | xargs)
+              if [ -z "$SCHEME" ]; then
+                echo "Error: No scheme found"
+                exit 1
+              fi
+              
+              # Export variables
+              envman add --key BITRISE_PROJECT_PATH --value "$PROJECT_PATH"
+              envman add --key BITRISE_SCHEME --value "$SCHEME"
+              
+              echo "Project Path: $PROJECT_PATH"
+              echo "Scheme: $SCHEME"
+    - script@1:
         title: Flutter Setup
         inputs:
           - content: |-
