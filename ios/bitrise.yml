@@ -57,3 +57,4 @@ meta:
 app:
   envs:
   - BITRISE_FLUTTER_PROJECT_LOCATION: "./ios"
+  - BITRISE_SCHEME: Runner
