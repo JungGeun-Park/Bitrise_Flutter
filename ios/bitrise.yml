@@ -22,11 +22,16 @@ workflows:
               flutter pub get    
     - flutter-build@0:
         inputs:
-        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-        - platform: ios
-        - ios_output_type: ipa
-        - distribution_method: app-store
-        - automatic_code_signing: api-key              
+          - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+          - platform: ios
+          - ios_output_type: archive        # 'ipa' 대신 'archive' 사용
+          - distribution_method: app-store
+          - automatic_code_signing: api-key
+          - ios_additional_params: --release
+          - ios_output_pattern: |-
+              *build/ios/iphoneos/*.app
+              *build/ios/archive/*.xcarchive
+          - cache_level: all
     - xcode-archive@5:
         inputs:
           - project_path: "$BITRISE_FLUTTER_PROJECT_LOCATION"
