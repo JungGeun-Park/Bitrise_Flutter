@@ -19,7 +19,20 @@ workflows:
               set -ex
               cd $BITRISE_FLUTTER_PROJECT_LOCATION
               flutter clean
-              flutter pub get    
+              flutter pub get
+    - script@1:
+        title: Update Build Number
+        inputs:
+          - content: |-
+              #!/bin/bash
+              set -ex
+              cd $BITRISE_SOURCE_DIR/ios
+              # iOS 빌드 번호 업데이트
+              agvtool new-version -all $BITRISE_BUILD_NUMBER
+              # Flutter 빌드 번호 업데이트 (pubspec.yaml)
+              cd ..
+              VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f1)
+              sed -i '' "s/^version: .*$/version: $VERSION+$BITRISE_BUILD_NUMBER/" pubspec.yaml              
     - flutter-build@0:
         inputs:
           - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
