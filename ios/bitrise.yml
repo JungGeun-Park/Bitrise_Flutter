@@ -56,5 +56,5 @@ meta:
     machine_type_id: g2-m1.4core
 app:
   envs:
-  - BITRISE_FLUTTER_PROJECT_LOCATION: "./ios/Runner.xcworkspace"
+  - BITRISE_FLUTTER_PROJECT_LOCATION: "./ios/Runner.xcodeproj"
   - BITRISE_SCHEME: Runner
