@@ -17,6 +17,7 @@ workflows:
     - flutter-build@0:
         inputs:
         - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+        - platform: ios
         - distribution_method: app-store
         - automatic_code_signing: api-key
     - script@1:
