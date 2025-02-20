@@ -23,7 +23,7 @@ workflows:
           - certificate_passphrase: "$CERTIFICATE_PASSWORD"
           - provisioning_profile_url: "file://./ios/profile.mobileprovision"
           - keychain_path: "$HOME/Library/Keychains/login.keychain-db"
-          - keychain_password: ""
+          - keychain_password: "$BITRISE_KEYCHAIN_PASSWORD"
           - team_id: "$BITRISE_TEAM_ID"
     - flutter-installer@0:
         inputs:
