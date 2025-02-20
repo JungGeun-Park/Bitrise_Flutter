@@ -34,7 +34,7 @@ workflows:
           - cache_level: all
     - xcode-archive@5:
         inputs:
-          - project_path: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+          - project_path: "$BITRISE_PROJECT_PATH"
           - scheme: "$BITRISE_SCHEME"
           - distribution_method: app-store
           - automatic_code_signing: api-key
@@ -69,4 +69,5 @@ meta:
 app:
   envs:
   - BITRISE_FLUTTER_PROJECT_LOCATION: "./"
+  - BITRISE_PROJECT_PATH: "./ios/Runner.xcodeproj"
   - BITRISE_SCHEME: Runner
