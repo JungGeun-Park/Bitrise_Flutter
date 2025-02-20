@@ -13,9 +13,9 @@ workflows:
               #!/bin/bash
               set -ex
               security delete-keychain login.keychain-db
-              security create-keychain -p "" login.keychain-db
+              security create-keychain -p "$BITRISE_KEYCHAIN_PASSWORD" login.keychain-db
               security default-keychain -s login.keychain-db
-              security unlock-keychain -p "" login.keychain-db
+              security unlock-keychain -p "$BITRISE_KEYCHAIN_PASSWORD" login.keychain-db
               security set-keychain-settings -t 3600 -l login.keychain-db
     - certificate-and-profile-installer@1:
         inputs:
@@ -36,21 +36,21 @@ workflows:
               #!/bin/bash
               set -ex
               
-              # iOS 프로젝트 경로 찾기
+              # Find iOS project path
               PROJECT_PATH=$(find . -path "*/ios/*.xcodeproj" -type d | head -n 1)
               if [ -z "$PROJECT_PATH" ]; then
                 echo "Error: No iOS Xcode project found"
                 exit 1
               fi
               
-              # 스킴 찾기
+              # Find scheme
               SCHEME=$(xcodebuild -project "$PROJECT_PATH" -list | grep -A 1 "Schemes:" | tail -n 1 | xargs)
               if [ -z "$SCHEME" ]; then
                 echo "Error: No scheme found"
                 exit 1
               fi
               
-              # 환경변수 설정
+              # Set environment variables
               envman add --key BITRISE_PROJECT_PATH --value "$PROJECT_PATH"
               envman add --key BITRISE_SCHEME --value "$SCHEME"
               
@@ -72,9 +72,9 @@ workflows:
               #!/bin/bash
               set -ex
               cd $BITRISE_SOURCE_DIR/ios
-              # iOS 빌드 번호 업데이트
+              # Update iOS build number
               agvtool new-version -all $BITRISE_BUILD_NUMBER
-              # Flutter 빌드 번호 업데이트 (pubspec.yaml)
+              # Update Flutter build number (pubspec.yaml)
               cd ..
               VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f1)
               sed -i '' "s/^version: .*$/version: $VERSION+$BITRISE_BUILD_NUMBER/" pubspec.yaml              
@@ -82,7 +82,7 @@ workflows:
         inputs:
           - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
           - platform: ios
-          - ios_output_type: archive        # 'ipa' 대신 'archive' 사용
+          - ios_output_type: archive        # Use 'archive' instead of 'ipa'
           - distribution_method: app-store
           - automatic_code_signing: api-key
           - ios_additional_params: --release
@@ -100,7 +100,7 @@ workflows:
           - certificate_url_list: "file://./ios/distribution.p12"
           - passphrase_list: "$CERTIFICATE_PASSWORD"
           - keychain_path: "$HOME/Library/Keychains/login.keychain-db"
-          - keychain_password: ""
+          - keychain_password: "$BITRISE_KEYCHAIN_PASSWORD"
     - script@1:
         title: Set IPA Path
         inputs:
@@ -148,5 +148,6 @@ meta:
 app:
   envs:
   - BITRISE_FLUTTER_PROJECT_LOCATION: "./"
+  - BITRISE_KEYCHAIN_PASSWORD: anything
   - BITRISE_TEAM_ID: 22X77ENQ2H
   - CERTIFICATE_PASSWORD: 123456
