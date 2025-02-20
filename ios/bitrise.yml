@@ -148,7 +148,7 @@ meta:
 app:
   envs:
   - BITRISE_FLUTTER_PROJECT_LOCATION: "./"
-  - BITRISE_PROJECT_PATH: "./ios/Runner.xcodeproj"
-  - BITRISE_SCHEME: Runner
-  - BITRISE_KEYCHAIN_PASSWORD: 1234
+  # - BITRISE_PROJECT_PATH: "./ios/Runner.xcodeproj"
+  # - BITRISE_SCHEME: Runner
+  - BITRISE_KEYCHAIN_PASSWORD: anything
   - BITRISE_TEAM_ID: 22X77ENQ2H
