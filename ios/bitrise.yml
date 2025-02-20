@@ -26,11 +26,18 @@ workflows:
           - content: |-
               #!/bin/bash
               set -ex
-              # Find the generated IPA file
-              IPA_PATH=$(find $BITRISE_SOURCE_DIR -name "*.ipa" -type f)
-              # Export the IPA path
+              # Look in the deploy directory specifically
+              IPA_PATH=$(find "$BITRISE_DEPLOY_DIR" -name "*.ipa" -type f)
+              if [ -z "$IPA_PATH" ]; then
+                echo "No IPA found in deploy directory, checking source directory..."
+                IPA_PATH=$(find "$BITRISE_SOURCE_DIR" -name "*.ipa" -type f)
+              fi
+              if [ -z "$IPA_PATH" ]; then
+                echo "Error: No IPA file found"
+                exit 1
+              fi
               envman add --key BITRISE_IPA_PATH --value "$IPA_PATH"
-              echo "Found IPA at: $IPA_PATH"        
+              echo "Found IPA at: $IPA_PATH"
     - deploy-to-itunesconnect-deliver@2:
         inputs:
           - ipa_path: "$BITRISE_IPA_PATH"
