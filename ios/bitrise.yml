@@ -22,7 +22,18 @@ workflows:
         - distribution_method: app-store
         - automatic_code_signing: api-key
         - ios_output_pattern: "*release.ipa"
-        - additional_build_params: "--release --no-codesign"
+        - additional_build_params: "--release"
+    - script@1:
+        title: Set IPA Path
+        inputs:
+          - content: |-
+              #!/bin/bash
+              set -ex
+              # Find the generated IPA file
+              IPA_PATH=$(find $BITRISE_SOURCE_DIR -name "*.ipa" -type f)
+              # Export the IPA path
+              envman add --key BITRISE_IPA_PATH --value "$IPA_PATH"
+              echo "Found IPA at: $IPA_PATH"        
     - deploy-to-itunesconnect-deliver@2:
         inputs:
           - ipa_path: "$BITRISE_IPA_PATH"
