@@ -17,12 +17,8 @@ workflows:
     - flutter-build@0:
         inputs:
         - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-        - platform: ios
-        - ios_output_type: archive
         - distribution_method: app-store
         - automatic_code_signing: api-key
-        - ios_output_pattern: "*release.ipa"
-        - additional_build_params: "--release"
     - script@1:
         title: Set IPA Path
         inputs:
